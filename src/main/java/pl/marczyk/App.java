@@ -13,7 +13,7 @@ public class App {
     final static WebClient client = new WebClient();
     public static void main(String[] args) throws IOException {
         LoginPage loginPage = new LoginPage(client);
-        Status status = loginPage.login("kenji89", "");
+        Status status = loginPage.login(args[0], args[1]);
         System.out.println(status);
     }
 }
