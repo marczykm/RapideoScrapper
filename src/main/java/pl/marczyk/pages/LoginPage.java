@@ -2,19 +2,18 @@ package pl.marczyk.pages;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import pl.marczyk.status.Status;
+import pl.marczyk.core.Credentials;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by mm on 16.10.2016.
  */
 public class LoginPage {
+    private final Logger LOGGER = Logger.getLogger(LoginPage.class.getName());
+
     private WebClient client;
     private HtmlPage page;
 
@@ -22,20 +21,19 @@ public class LoginPage {
         this.client = client;
     }
 
-    public Status login(String username, String password) throws IOException {
-        page = client.getPage("http://rapideo.pl");
+    public HtmlPage login(Credentials credentials) throws IOException {
+        LOGGER.info("Logging in");
+        page = client.getPage("https://rapideo.pl");
         List<HtmlForm> forms = page.getForms();
         HtmlForm htmlForm = forms.get(1);
         HtmlElement submit = htmlForm.getElementsByAttribute("button", "type", "submit").get(0);
         HtmlInput loginElement = htmlForm.getInputByName("login");
-        loginElement.setValueAttribute(username);
+        loginElement.setValueAttribute(credentials.getUsername());
         HtmlInput passwordElement = htmlForm.getInputByName("password");
-        passwordElement.setValueAttribute(password);
+        passwordElement.setValueAttribute(credentials.getPassword());
         page.getElementsByTagName("button");
         page = submit.click();
-        if(isLoggedIn(page))
-            return Status.SUCCESS;
-        return Status.FAILED;
+        return page;
     }
 
     public boolean isLoggedIn(HtmlPage page) {
