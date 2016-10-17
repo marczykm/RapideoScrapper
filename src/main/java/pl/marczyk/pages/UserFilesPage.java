@@ -8,7 +8,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import pl.marczyk.core.Credentials;
-import pl.marczyk.core.File;
+import pl.marczyk.model.File;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,12 +53,22 @@ public class UserFilesPage {
                 DomNodeList<HtmlElement> label = input.getElementsByTagName("label");
                 DomNodeList<HtmlElement> a = label.get(0).getElementsByTagName("a");
                 String name = a.get(0).getTextContent();
-                File file = new File(name);
+                File file = new File();
+                file.setName(name);
                 String href = a.get(0).getAttribute("href");
                 file.setMainUrl(href);
 
                 List<HtmlElement> fileInfo = input.getElementsByAttribute("div", "class", "fileInfo");
-//                fileInfo.get(0)
+                DomNodeList<HtmlElement> spans = fileInfo.get(0).getElementsByTagName("span");
+                String size = spans.get(1).getElementsByTagName("strong").get(0).getTextContent();
+                file.setSize(size);
+                String expirationDate = spans.get(2).getElementsByTagName("strong").get(0).getTextContent();
+                file.setExpirationDate(expirationDate);
+
+                DomNodeList<HtmlElement> alternateLinks = fileInfo.get(1).getElementsByTagName("a");
+                for(HtmlElement link : alternateLinks){
+                    file.getBackUpUrls().add(link.getAttribute("href"));
+                }
 
                 return file;
             }

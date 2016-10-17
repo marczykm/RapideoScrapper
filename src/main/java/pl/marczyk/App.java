@@ -2,7 +2,7 @@ package pl.marczyk;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import pl.marczyk.core.Credentials;
-import pl.marczyk.core.File;
+import pl.marczyk.model.File;
 import pl.marczyk.pages.LoginPage;
 import pl.marczyk.pages.UserFilesPage;
 
