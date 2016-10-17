@@ -33,6 +33,11 @@ public class LoginPage {
         passwordElement.setValueAttribute(credentials.getPassword());
         page.getElementsByTagName("button");
         page = submit.click();
+        if (isLoggedIn(page)) {
+            LOGGER.info("Logged in succesfully");
+        } else {
+            LOGGER.warning("Couldn't log in!");
+        }
         return page;
     }
 
