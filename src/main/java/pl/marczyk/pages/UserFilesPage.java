@@ -6,10 +6,13 @@ import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import pl.marczyk.core.Credentials;
 import pl.marczyk.model.File;
+import pl.marczyk.utils.DateParser;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -24,6 +27,10 @@ public class UserFilesPage {
 
     private WebClient client;
     private HtmlPage page;
+
+    public UserFilesPage() {
+        this.client = new WebClient();
+    }
 
     public UserFilesPage(WebClient client) {
         this.client = client;
@@ -63,11 +70,21 @@ public class UserFilesPage {
                 String size = spans.get(1).getElementsByTagName("strong").get(0).getTextContent();
                 file.setSize(size);
                 String expirationDate = spans.get(2).getElementsByTagName("strong").get(0).getTextContent();
-                file.setExpirationDate(expirationDate);
+                try {
+                    file.setExpirationDate(DateParser.parse(expirationDate));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
                 DomNodeList<HtmlElement> alternateLinks = fileInfo.get(1).getElementsByTagName("a");
                 for(HtmlElement link : alternateLinks){
                     file.getBackUpUrls().add(link.getAttribute("href"));
+                    Collection<String> filter = Collections2.filter(file.getBackUpUrls(), new Predicate<String>() {
+                        public boolean apply(String s) {
+                            return !s.trim().isEmpty();
+                        }
+                    });
+                    file.setBackUpUrls(filter);
                 }
 
                 return file;

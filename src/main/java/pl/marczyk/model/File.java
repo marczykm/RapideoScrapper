@@ -2,6 +2,8 @@ package pl.marczyk.model;
 
 import com.google.common.collect.Lists;
 
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -10,8 +12,8 @@ import java.util.List;
 public class File {
     private String name;
     private String mainUrl;
-    private List<String> backUpUrls;
-    private String expirationDate;
+    private Collection<String> backUpUrls;
+    private Date expirationDate;
     private String size;
 
     public File() {
@@ -34,15 +36,19 @@ public class File {
         this.mainUrl = mainUrl;
     }
 
-    public List<String> getBackUpUrls() {
+    public Collection<String> getBackUpUrls() {
         return backUpUrls;
     }
 
-    public String getExpirationDate() {
+    public void setBackUpUrls(Collection<String> backUpUrls) {
+        this.backUpUrls = backUpUrls;
+    }
+
+    public Date getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(String expirationDate) {
+    public void setExpirationDate(Date expirationDate) {
         this.expirationDate = expirationDate;
     }
 
@@ -58,6 +64,10 @@ public class File {
     public String toString() {
         return "File{" +
                 "name='" + name + '\'' +
+                ", mainUrl='" + mainUrl + '\'' +
+                ", backUpUrls=" + backUpUrls +
+                ", expirationDate=" + expirationDate +
+                ", size='" + size + '\'' +
                 '}';
     }
 
